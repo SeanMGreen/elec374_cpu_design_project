@@ -1,5 +1,4 @@
-module register(clk, clr, r1in, data_in, data_out);
-
+module register (clk, clr, r1in, data_in, data_out);
 input clk;
 input clr;
 input r1in;
