@@ -32,3 +32,5 @@ module restoring_div_32_bit(q, m, d, r);
 				d[0] = 1;	//no restore, bit 0 of quotient is 1
 			end
 		end
+	end
+endmodule
