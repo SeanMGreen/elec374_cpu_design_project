@@ -12,7 +12,7 @@ module restoring_div_32_bit(q, m, d, r);
 	initial begin
 		for (i = 0; i < 32; i = i + 1) begin
 			r[i] = 0; 		//initializes r with all zeros
-			d[i] = q[i]
+			d[i] = q[i];
 		end
 		
 		for (i = 0; i < 32; i = i + 1) begin
@@ -27,7 +27,7 @@ module restoring_div_32_bit(q, m, d, r);
 			r = r - m;		//subtracts r by the divisor
 			if (r[32] == 1) begin
 				d[0] = 0;	//bit 0 of quotient is 0
-				r[32:0] = r_prev[32:0]	//restore the r value
+				r[32:0] = r_prev[32:0];	//restore the r value
 			end else begin
 				d[0] = 1;	//no restore, bit 0 of quotient is 1
 			end
