@@ -1,16 +1,24 @@
 //booth_algorithm_32_bit.v
+`timescale 1ns/10ps
 module booth_algorithm_32_bit(q, m, p);
 	input [31:0] q;				//Multiplier
 	input [31:0] m;				//Multiplicand
-	output [63:0] p;			//Product		
+	output [63:0] p;			   //Product
 	
-	integer i;					//Looping variable
-	integer q_temp = q;			//Stores q value
+	reg [63:0] p;
+		
+	integer i, j;					//Looping variable
+	integer q_temp;			//Stores q value
 	
-	reg [1:0] q_vals [31:0]		//Stores value of each bit
-	reg [1:0] booth_vals [31:0]	//Stores booth algorithm actions
+	reg [31:0] q_vals;		//Stores value of each bit
+	reg [31:0] booth_vals ;	//Stores booth algorithm actions
+	wire [31:0] m_2_comp; 	//Stores 2's compliment value of multiplicand
+	reg [63:0] temp; 		//Temp value used for required operations
+	
+	neg_32_bit M1(m_2_comp[31:0], m[31:0]);
 	
 	initial begin				//Converts the multiplier to binary, with each value accessible via an array
+		q_temp = q;
 		for (i = 31; i >= 0; i = i - 1) begin
 			if (q_temp <= 2**i) begin 	//Checks if bit is in multiplier
 				q_vals[i] = 1;			//Assigns 1 if true
@@ -31,6 +39,26 @@ module booth_algorithm_32_bit(q, m, p);
 				//if (q_vals[i] == 1 && q_vals[i-1] == 1)booth_vals[i] = 0;
 			end
 			
-			p = p + m*booth_vals[i]		//Sums the values of the bits in the product
+			if (booth_vals[i] == 1) begin				//Checks if the booth value is 1
+				for (j = i; j < 63; j = j + 1) begin
+					if (j < 32) begin
+						temp[j] = m[j];					//Sets the temp value to that of the multiplicand
+					end else begin
+						temp[j] = m[31];				//Sets the other bits to the value of the highest bit
+					end
+				end
+				p[j] = p[j] + temp[j];					//Adds the temp value to the result
+				
+			end else if (booth_vals[i] == -1) begin		//Checks if the booth value is -1
+				for (j = i; j < 64; j = j + 1) begin
+					if (j < 32) begin
+						temp[j] = m_2_comp[j];			//Sets the temp value to the 2's compliment of the multiplicand
+					end else begin
+						temp[j] = m_2_comp[31];			//Sets the other bits to the value of the highest bit
+					end
+				end	
+				p[j] = p[j] + temp[j];					//Adds the temp value to the result
+			end
 		end
 	end
+endmodule
