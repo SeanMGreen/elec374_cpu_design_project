@@ -30,10 +30,10 @@ module booth_algorithm_32_bit(m, q, p);
 		for(i = 0; i<32; i=i+1)begin
 			count = i;
 			if(booth_mul[i] == 2'b01)begin 
-				output_val = output_val + m_val<<<count;
+				output_val = output_val + $signed(m_val<<<count);
 			end else if (booth_mul[i] == 2'b10)begin
 				m_val_2s_complement = ~m_val+1'b1;
-				output_val = output_val + m_val_2s_complement<<<count;
+				output_val = output_val + $signed(m_val_2s_complement<<<count);
 			end else begin
 				output_val = output_val;
 			end 
